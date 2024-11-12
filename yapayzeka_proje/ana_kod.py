@@ -256,7 +256,7 @@ def draw_car(x, y, color):
     pygame.draw.circle(WINDOW, SILVER, (x + 100, y + 30), 18)
     pygame.draw.circle(WINDOW, BLACK, (x + 100, y + 30), 15)
     pygame.draw.circle(WINDOW, SILVER, (x + 100, y + 30), 7)
-
+s
 # Ana fonksiyon
 def main():
     pygame.display.update()
