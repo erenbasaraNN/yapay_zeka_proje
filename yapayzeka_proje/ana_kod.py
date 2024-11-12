@@ -268,10 +268,13 @@ def main():
     car_x_yellow = 50
     car_y_yellow = 690
     car_speed_yellow = 2
+    original_car_speed_yellow = car_speed_yellow  # Orijinal hızı sakla
+
 
     car_x_red = 1000
     car_y_red = 40
     car_speed_red = 2
+    original_car_speed_red = car_speed_red  # Kırmızı arabanın orijinal hızını sakla
 
     # Kedi
     cat_image = pygame.image.load("kedi.png")
@@ -282,9 +285,19 @@ def main():
     # NPC Karakterler
     npc_woman_left = pygame.image.load("npc_kopekli_abla_sol.png")
     npc_woman_right = pygame.image.load("npc_kopekli_abla_sag.png")
+    # Köpekli kadının resim boyutlarını al
+    npc_woman_image = npc_woman_left  # Resmin yönü fark etmez, boyutlar aynı
+    npc_woman_width = npc_woman_image.get_width()
+    npc_woman_height = npc_woman_image.get_height()
+
 
     npc_man_front = pygame.image.load("npc_adam_on.png")
     npc_man_back = pygame.image.load("npc_adam_arka.png")
+    # NPC Adamın boyutları için resmin genişliği ve yüksekliği
+    npc_man_image = npc_man_front
+    npc_man_width = npc_man_image.get_width()
+    npc_man_height = npc_man_image.get_height()
+
 
     npc_woman_x = 920
     npc_woman_y = 270
@@ -360,6 +373,36 @@ def main():
             if npc_man_y < -75:
                 moving_down = True
                 npc_man = npc_man_front
+
+        # Araba ve yaya için dikdörtgenler oluştur
+        yellow_car_rect = pygame.Rect(car_x_yellow, car_y_yellow, 120, 40)  # Arabanın dikdörtgeni
+        npc_man_rect = pygame.Rect(npc_man_x, npc_man_y, npc_man_width, npc_man_height)  # Yayanın dikdörtgeni
+        # Kırmızı araba ve köpekli kadın için dikdörtgenler oluştur
+        red_car_rect = pygame.Rect(car_x_red, car_y_red, 120, 40)  # Kırmızı arabanın dikdörtgeni
+        npc_woman_rect = pygame.Rect(npc_woman_x, npc_woman_y, npc_woman_width, npc_woman_height)  # Köpekli kadının dikdörtgeni
+
+        # Çarpışma kontrolü
+        if yellow_car_rect.colliderect(npc_man_rect):
+            car_speed_yellow = 0  # Araba durur
+        else:
+            car_speed_yellow = original_car_speed_yellow  # Araba hareket etmeye devam eder
+        
+        if red_car_rect.colliderect(npc_woman_rect) or red_car_rect.colliderect(npc_man_rect):
+            car_speed_red = 0  # Kırmızı araba durur
+        else:
+            car_speed_red = original_car_speed_red  # Kırmızı araba hareket etmeye devam eder
+        
+        # Sarı arabanın pozisyonunu güncelle
+        car_x_yellow += car_speed_yellow
+
+        if car_x_yellow > 800:
+            car_x_yellow = -100
+        # Kırmızı arabanın pozisyonunu güncelle
+        car_x_red -= car_speed_red
+
+        if car_x_red < 100:
+            car_x_red = 1100
+
 
         # Çizim fonksiyonlarını çağır
         draw_diagonal_gravel_road()
